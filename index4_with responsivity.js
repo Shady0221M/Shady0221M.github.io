@@ -27,6 +27,11 @@ var body=document.querySelector("body");
 var container=document.querySelector(".container");
 var block=document.querySelectorAll(".block");
 
+//Variables for sizing
+var block_side='70';
+var gap='5';
+var ball_size='10';
+
 //1.1Setup outer box
 function setupOuterFrameCB(){
     var newDiv=document.createElement("div");
@@ -38,7 +43,14 @@ function setupOuterFrameCB(){
     newDiv.style.backgroundColor='#AF8F6F';
    
 }
-
+function responsive(){
+    var width=window.innerWidth;
+    if (width<=320){
+        block_side='20';
+        gap='1.428';
+        ball_size='2.857';
+    }
+}
 //1.2Set up 64 boxes as (8x8)
 function  setupInnerBlocks(){
     for(var i=7;i>=0;i--)
@@ -49,9 +61,8 @@ function  setupInnerBlocks(){
                     newDiv.className='r'+i.toString()+' c'+j.toString()+' block';
                     newDiv.setAttribute('id',(i).toString()+(j).toString());
                     document.querySelector(".container").appendChild(newDiv);
-                    newDiv.style.width='70px';
-                    newDiv.style.height='70px';
-                    // newDiv.style.opacity='0.5';
+                    newDiv.style.width=block_side+'px';//
+                    newDiv.style.height=block_side+'px';//
                     newDiv.style.backgroundColor='black';
                 }
         }
@@ -61,12 +72,11 @@ function  setupInnerBlocks(){
     body.style.display='flex';
     body.style.justifyContent="center";
     container.style.display="grid";
-    container.style.grid="repeat(8,70px) / repeat(8,70px)";
-    container.style.columnGap="5px";
-    container.style.rowGap="5px";
-    console.log("done");
+    container.style.grid="repeat(8,"+block_side+"px) / repeat(8,"+block_side+"px)";
+    container.style.columnGap=gap+"px";//
+    container.style.rowGap=gap+"px";//
     const  audioElement=document.createElement('audio');
-    audioElement.src='./resources/audio/Game_theme_song.mp3';
+    audioElement.src='/resources/audio/Game_theme_song.mp3';
     // document.querySelector('audio').display='none';
     body.appendChild(audioElement);
     //deeppink
@@ -108,21 +118,18 @@ function setupPieces(){
     var image=document.querySelectorAll("img");
     for  (var i=0;i<image.length;i++)
         {
-            image[i].style.height='70px';
-            image[i].style.width='70px';
+            image[i].style.height=block_side+'px';//
+            image[i].style.width=block_side+'px';//
              
         }
     document.getElementById("CannonA").style.zIndex='2';
     document.getElementById("CannonB").style.zIndex='2';    
     document.getElementById("CannonA").style.position='absolute';
     document.getElementById("CannonB").style.position='absolute';
-    document.querySelector(".ballB").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:330px;top:555px;z-index:1;";
-    document.querySelector(".ballA").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:255px;top:30px;z-index:1;";
-    document.getElementById('bulletA').style.cssText='height:33.33px;width:10px;position:absolute;top:10px;left:-10px;';
-    document.getElementById('bulletB').style.cssText='height:33.333px;width:10px;position:absolute;top:-33.33px;left:0px;';
-    // document.getElementById('rotate').style.cssText='';
-    // document.getElementById('rr').style.cssText='';
-    // document.getElementById('rl').style.cssText='';
+    document.querySelector(".ballB").style.cssText="width:"+ball_size+"px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:330px;top:555px;z-index:1;";
+    document.querySelector(".ballA").style.cssText="width:"+ball_size+"px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:255px;top:30px;z-index:1;";
+    document.getElementById('bulletA').style.cssText='height:33.33px;width:'+ball_size+'px;position:absolute;top:10px;left:-10px;';
+    document.getElementById('bulletB').style.cssText='height:33.333px;width:'+ball_size+'px;position:absolute;top:-33.33px;left:0px;';
     var container=document.querySelector(".container");
     container.style.position='relative';
     container.style.left='-250px';

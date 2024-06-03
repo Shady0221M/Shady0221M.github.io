@@ -74,6 +74,7 @@
   width: 125px;
   z-index: 4;
   font-size: 30px;
+
 }
 #reset{
   left:140px;
@@ -87,7 +88,7 @@
   position: absolute;
     height: 60vh;
     width: 400px;
-    background-image:url('./resources/images/Cannon_tank.jpg');
+    background-image:url('../resources/images/background_image/Cannon_tank.jpg');
     top: 150px;
     left: 475px;
     z-index: 3;
@@ -119,7 +120,7 @@
     position: absolute;
     height: 65vh;
     width: 400px;
-    background-image:url('./resources/images/background_image/Winner.png');
+    background-image:url('../resources/images/background_image/Winner.png');
     background-size:cover;
     top: 150px;
     left: 435px;

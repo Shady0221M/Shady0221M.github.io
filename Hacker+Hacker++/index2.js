@@ -66,7 +66,7 @@ function  setupInnerBlocks(){
     container.style.rowGap="5px";
     console.log("done");
     const  audioElement=document.createElement('audio');
-    audioElement.src='./resources/audio/Game_theme_song.mp3';
+    audioElement.src='/resources/audio/Game_theme_song.mp3';
     // document.querySelector('audio').display='none';
     body.appendChild(audioElement);
     //deeppink
@@ -83,25 +83,25 @@ function clearBoard(){
 //1.3Setup pieces in position
 function setupPieces(){
     var block=document.querySelectorAll(".block");
-    block[4].innerHTML="<img id='TitanA' src='resources/images/pieces/TitanA.png' alt='TitanA'></img>";
+    block[4].innerHTML="<img id='TitanA' src='/resources/images/pieces/TitanA.png' alt='TitanA'></img>";
     block[4].className=block[4].className+" A Titan";
-    block[3].innerHTML="<img id='CannonA' src='resources/images/pieces/CannonA.png' alt='CannonA'></img><div id='b73' class='r7 c3 down ballA'><img id='bulletA' src='resources/images/pieces/bullet_down.svg'</div>";
+    block[3].innerHTML="<img id='CannonA' src='/resources/images/pieces/CannonA.png' alt='CannonA'></img><div id='b73' class='r7 c3 down ballA'><img id='bulletA' src='/resources/images/pieces/bullet_down.svg'</div>";
     block[3].className=block[3].className+" A Cannon";
-    block[12].innerHTML="<img id='TankA' src='resources/images/pieces/TankA.png' alt='TankA'></img>";
+    block[12].innerHTML="<img id='TankA' src='/resources/images/pieces/TankA.png' alt='TankA'></img>";
     block[12].className=block[12].className+" A Tank";
-    block[18].innerHTML="<img id='RicochetA' src='resources/images/pieces/RicochetA.png' alt='RicochetA'></img>";
+    block[18].innerHTML="<img id='RicochetA' src='/resources/images/pieces/RicochetA.png' alt='RicochetA'></img>";
     block[18].className=block[18].className+" A Ricochet NE";
-    block[21].innerHTML="<img id='Semi-RicochetA' src='resources/images/pieces/Semi-RicochetA.png' alt='Semi-RicochetA'></img>";
+    block[21].innerHTML="<img id='Semi-RicochetA' src='/resources/images/pieces/Semi-RicochetA.png' alt='Semi-RicochetA'></img>";
     block[21].className=block[21].className+" A Semi-Ricochet NE";
-    block[60].innerHTML="<img id='CannonB' src='resources/images/pieces/CannonB.png' alt='CannonB'></img><div id='b04' class='r0 c4 up ballB'><img id='bulletB' src='resources/images/pieces/bullet_down.svg'></div>";
+    block[60].innerHTML="<img id='CannonB' src='/resources/images/pieces/CannonB.png' alt='CannonB'></img><div id='b04' class='r0 c4 up ballB'><img id='bulletB' src='/resources/images/pieces/bullet_down.svg'></div>";
     block[60].className=block[60].className+" B Cannon";
-    block[59].innerHTML="<img id='TitanB' src='resources/images/pieces/TitanB.png' alt='TitanB'></img>";
+    block[59].innerHTML="<img id='TitanB' src='/resources/images/pieces/TitanB.png' alt='TitanB'></img>";
     block[59].className=block[59].className+" B Titan";
-    block[51].innerHTML="<img id='TankB' src='resources/images/pieces/TankB.png' alt='TankB'></img>";
+    block[51].innerHTML="<img id='TankB' src='/resources/images/pieces/TankB.png' alt='TankB'></img>";
     block[51].className=block[51].className+" B Tank";
-    block[45].innerHTML="<img id='RicochetB' src='resources/images/pieces/RicochetB.png' alt='RicochetB'></img>";
+    block[45].innerHTML="<img id='RicochetB' src='/resources/images/pieces/RicochetB.png' alt='RicochetB'></img>";
     block[45].className=block[45].className+" B Ricochet NE";
-    block[42].innerHTML="<img id='Semi-RicochetB' src='resources/images/pieces/Semi-RicochetB.png' alt='Semi-RicochetB'></img>";
+    block[42].innerHTML="<img id='Semi-RicochetB' src='/resources/images/pieces/Semi-RicochetB.png' alt='Semi-RicochetB'></img>";
     block[42].className=block[42].className+" B Semi-Ricochet NE";
    
     document.getElementById('moves_played').style.visibility='visible';
@@ -540,7 +540,6 @@ function move_buttonA(){
     var columnNumber = parseInt(id[1]); 
     ba.style.left=(columnNumber*75+30)+'px';
     ba.style.top='30px';
-    ba.style.visibility='visible';
     
 }
 function move_buttonB(){
@@ -549,7 +548,6 @@ function move_buttonB(){
     var columnNumber = parseInt(id[1]); 
     bb.style.top='555px';
     bb.style.left=(columnNumber*75+30)+'px';
-    bb.style.visibility='visible';
 }
 
 function highlightBoxes(){
@@ -674,13 +672,15 @@ async function one_move_over(arrOfHighlighted,array_swap_ids) {
                 document.getElementById(array_swap_ids[j]).style.backgroundColor="black";
             }
             const  audioElement=document.createElement('audio');
-            audioElement.src='./resources/audio/Bullet_fire.mp3';
+            audioElement.src='/resources/audio/Bullet_fire.mp3';
             // audioElement.controls=true;
             body.appendChild(audioElement);
             audioElement.play();
             
             
         if (toggle_turn == 'A') {
+            var ba=document.querySelector(".ballA");
+            ba.style.visibility='visible';
             var newDiv = document.querySelector(".A.Cannon");
             move_buttonA();
             if (flag==1)
@@ -690,6 +690,8 @@ async function one_move_over(arrOfHighlighted,array_swap_ids) {
             {await move_bullet_with_promise('A',pause_3_cp);}
             
         } else {
+            var bb=document.querySelector(".ballB");
+            bb.style.visibility='visible';
             var newDiv = document.querySelector(".B.Cannon");
             move_buttonB();
             if (flag==1)

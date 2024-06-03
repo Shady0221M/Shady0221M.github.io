@@ -105,7 +105,7 @@
 #moves_played{
   width:390px;
   height:500px; 
-  background-color:yellowgreen;
+  background-color:rgb(183, 207, 136);
   color:#3C3633;
    position:relative; 
   z-index:7;

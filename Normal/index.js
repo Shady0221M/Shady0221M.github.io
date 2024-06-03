@@ -70,29 +70,29 @@ function clearBoard(){
             block[i].innerHTML='';block[i].className=block[i].className.slice(0,11);
         }
 }
-
+///resources/images/pieces/bullet_down.svg
 //1.3Setup pieces in position
 function setupPieces(){
     var block=document.querySelectorAll(".block");
-    block[4].innerHTML="<img id='TitanA' src='resources/images/pieces/TitanA.png' alt='TitanA'></img>";
+    block[4].innerHTML="<img id='TitanA' src='/resources/images/pieces/TitanA.png' alt='TitanA'></img>";
     block[4].className=block[4].className+" A Titan";
-    block[3].innerHTML="<img id='CannonA' src='resources/images/pieces/CannonA.png' alt='CannonA'></img><div id='b73' class='r7 c3 down ballA'></div>";
+    block[3].innerHTML="<img id='CannonA' src='/resources/images/pieces/CannonA.png' alt='CannonA'></img><div id='b73' class='r7 c3 down ballA'></div>";
     block[3].className=block[3].className+" A Cannon";
-    block[12].innerHTML="<img id='TankA' src='resources/images/pieces/TankA.png' alt='TankA'></img>";
+    block[12].innerHTML="<img id='TankA' src='/resources/images/pieces/TankA.png' alt='TankA'></img>";
     block[12].className=block[12].className+" A Tank";
-    block[18].innerHTML="<img id='RicochetA' src='resources/images/pieces/RicochetA.png' alt='RicochetA'></img>";
+    block[18].innerHTML="<img id='RicochetA' src='/resources/images/pieces/RicochetA.png' alt='RicochetA'></img>";
     block[18].className=block[18].className+" A Ricochet NE";
-    block[21].innerHTML="<img id='Semi-RicochetA' src='resources/images/pieces/Semi-RicochetA.png' alt='Semi-RicochetA'></img>";
+    block[21].innerHTML="<img id='Semi-RicochetA' src='/resources/images/pieces/Semi-RicochetA.png' alt='Semi-RicochetA'></img>";
     block[21].className=block[21].className+" A Semi-Ricochet NE";
-    block[60].innerHTML="<img id='CannonB' src='resources/images/pieces/CannonB.png' alt='CannonB'></img><div id='b04' class='r0 c4 up ballB'></div>";
+    block[60].innerHTML="<img id='CannonB' src='/resources/images/pieces/CannonB.png' alt='CannonB'></img><div id='b04' class='r0 c4 up ballB'></div>";
     block[60].className=block[60].className+" B Cannon";
-    block[59].innerHTML="<img id='TitanB' src='resources/images/pieces/TitanB.png' alt='TitanB'></img>";
+    block[59].innerHTML="<img id='TitanB' src='/resources/images/pieces/TitanB.png' alt='TitanB'></img>";
     block[59].className=block[59].className+" B Titan";
-    block[51].innerHTML="<img id='TankB' src='resources/images/pieces/TankB.png' alt='TankB'></img>";
+    block[51].innerHTML="<img id='TankB' src='/resources/images/pieces/TankB.png' alt='TankB'></img>";
     block[51].className=block[51].className+" B Tank";
-    block[45].innerHTML="<img id='RicochetB' src='resources/images/pieces/RicochetB.png' alt='RicochetB'></img>";
+    block[45].innerHTML="<img id='RicochetB' src='/resources/images/pieces/RicochetB.png' alt='RicochetB'></img>";
     block[45].className=block[45].className+" B Ricochet NE";
-    block[42].innerHTML="<img id='Semi-RicochetB' src='resources/images/pieces/Semi-RicochetB.png' alt='Semi-RicochetB'></img>";
+    block[42].innerHTML="<img id='Semi-RicochetB' src='/resources/images/pieces/Semi-RicochetB.png' alt='Semi-RicochetB'></img>";
     block[42].className=block[42].className+" B Semi-Ricochet NE";
    
 
