@@ -1,0 +1,651 @@
+Code_As_Of_now
+
+//Static_Variables
+
+var current_rotation_ricochetA=0;
+var current_rotation_semiricochetA=0;
+var current_rotation_ricochetB=0;
+var current_rotation_semiricochetB=0;
+
+
+//1.1Setup outer box
+function setupOuterFrameCB(){
+    var newDiv=document.createElement("div");
+    newDiv.style.backgroundColor="black";
+    newDiv.style.position='relative';
+    newDiv.style.border="10px solid deeppink";
+    var parent=document.querySelector("body");
+    parent.appendChild(newDiv);
+    newDiv.className='container';
+    newDiv.style.backgroundColor='deeppink';
+   
+}
+
+//1.2Set up 64 boxes as (8x8)
+function  setupInnerBlocks(){
+    for(var i=7;i>=0;i--)
+        {
+            for(var j=0;j<=7;j++)
+                {
+                    var newDiv=document.createElement("div");
+                    
+                    newDiv.className='r'+i.toString()+' c'+j.toString()+' block';
+                    
+                    newDiv.setAttribute('id',(i).toString()+(j).toString());
+                    
+                    document.querySelector(".container").appendChild(newDiv);
+                    newDiv.style.width='70px';
+                    newDiv.style.height='70px';
+                    newDiv.style.position='relative';
+                    console.log("done");
+                    newDiv.style.backgroundColor='black';
+                }
+        }
+    var body=document.querySelector("body");
+    var container=document.querySelector(".container");
+    var block=document.querySelectorAll(".block");
+    body.style.display='flex';
+    body.style.justifyContent="center";
+    container.style.display="grid";
+    container.style.grid="repeat(8,70px) / repeat(8,70px)";
+    container.style.columnGap="5px";
+    container.style.rowGap="5px";
+
+    
+    // for(var i=0;i<block.length;i++)
+    //     {
+    //         block[i].style.border="5px solid deeppink";
+    //     }
+    
+    // document.querySelector("body").style.csstext="display:flex;justify-content:center";
+    console.log("done");
+
+    // document.querySelector(".container").style.cssText="display:'grid'; grid-template:repeat(8,70px) / repeat(8,70px)";
+
+}
+//1.3Setup pieces in position
+function setupPieces(){
+    var block=document.querySelectorAll(".block");
+    block[4].innerHTML="<img id='TitanA' src='resources/images/pieces/TitanA.png' alt='TitanA'></img>";
+    block[4].className=block[4].className+" A Titan";
+    block[3].innerHTML="<img id='CannonA' src='resources/images/pieces/CannonA.png' alt='CannonA'></img><div id='ballA' class='r7 c3 down'></div>";
+    block[3].className=block[3].className+" A Cannon";
+    block[12].innerHTML="<img id='TankA' src='resources/images/pieces/TankA.png' alt='TankA'></img>";
+    block[12].className=block[12].className+" A Tank";
+    block[18].innerHTML="<img id='RicochetA' src='resources/images/pieces/RicochetA.png' alt='RicochetA'></img>";
+    block[18].className=block[18].className+" A Ricochet NE";
+    block[21].innerHTML="<img id='Semi-RicochetA' src='resources/images/pieces/Semi-RicochetA.png' alt='Semi-RicochetA'></img>";
+    block[21].className=block[21].className+" A Semi-Ricochet NE";
+    block[60].innerHTML="<img id='CannonB' src='resources/images/pieces/CannonB.png' alt='CannonB'></img><div id='ballB' class='r0 c4 up'></div>";
+    block[60].className=block[60].className+" B Cannon";
+    block[59].innerHTML="<img id='TitanB' src='resources/images/pieces/TitanB.png' alt='TitanB'></img>";
+    block[59].className=block[59].className+" B Titan";
+    block[51].innerHTML="<img id='TankB' src='resources/images/pieces/TankB.png' alt='TankB'></img>";
+    block[51].className=block[51].className+" B Tank";
+    block[45].innerHTML="<img id='RicochetB' src='resources/images/pieces/RicochetB.png' alt='RicochetB'></img>";
+    block[45].className=block[45].className+" B Ricochet NE";
+    block[42].innerHTML="<img id='Semi-RicochetB' src='resources/images/pieces/Semi-RicochetB.png' alt='Semi-RicochetB'></img>";
+    block[42].className=block[42].className+" B Semi-Ricochet NE";
+   
+
+    var image=document.querySelectorAll("img");
+    for  (var i=0;i<image.length;i++)
+        {
+            image[i].style.height='70px';
+            image[i].style.width='70px';
+             
+        }
+    document.getElementById("CannonA").style.zIndex='2';
+    document.getElementById("CannonB").style.zIndex='2';    
+    document.getElementById("CannonA").style.position='absolute';
+    document.getElementById("CannonB").style.position='absolute';
+    document.getElementById("ballB").style.cssText="width:20px;height:20px;background-color:blue;border-radius:50%;position:absolute;left:24.5px;bottom:24.5px;z-index:1;";
+    document.getElementById("ballA").style.cssText="width:20px;height:20px;background-color:blue;border-radius:50%;position:absolute;left:24.5px;top:24.5px;z-index:1;";
+    button=document.createElement("button");
+    document.body.appendChild(button);
+    button.innerHTML="Transition";
+    button.style.position='relative';
+    button.style.top='65px';
+    button.style.right='790px';
+    button.style.height='50px'
+    
+    button.addEventListener("click",apply_transitionA);
+}
+function apply_transitionA(){
+        ba=document.getElementById("ballA");
+        ba.style.transform='translateY(200px)';
+       
+}
+var body=document.querySelector("body");
+var container=document.querySelector(".container");
+var block=document.querySelectorAll(".block");
+
+function initialsetup()
+    {
+    setupOuterFrameCB();
+    setupInnerBlocks();
+    setupPieces();
+    }
+initialsetup();
+
+// const newDiv=document.createElement("div");
+// newDiv.innerHTML="Hello, World!";
+// newDiv.style.backgroundColor="blue";
+// newDiv.style.color="white";
+// newDiv.style.padding="10px";
+// const parent=document.querySelector("body");
+// parent.appendChild(newDiv);
+
+function defaultBlockColor(){
+    // document.querySelectorAll(".block").forEach(item =>{item.style.backgroundColor="black"})
+    
+    for(var i=0;i<=64;i++)
+        {
+            document.querySelectorAll(".block")[i].style.backgroundColor="black";
+        }
+    
+}
+//****************************************************************************************************************************** */
+//2.1Highlight
+function move_buttonA(){
+    var ba=document.getElementById("ballA");
+    ba.style.left='24.5px';
+    ba.style.top='24.5px';
+    
+}
+function move_buttonB(){
+    var bb=document.getElementById("ballB");
+    bb.style.bottom='24.5px';
+    bb.style.left='24.5px';
+    
+}
+function highlightBoxes(){
+
+        document.querySelectorAll(".A").forEach(item =>{item.addEventListener("click",pinky)});
+        document.querySelectorAll(".B").forEach(item =>{item.addEventListener("click",pinky)}); 
+               
+}
+
+function pinky()
+{      
+        var id1=this.id;
+        document.querySelectorAll(".A").forEach(item =>{item.removeEventListener("click",pinky);});
+        document.querySelectorAll(".B").forEach(item =>{item.removeEventListener("click",pinky);});
+        var arrOfHighlighted=[];
+        // alert(this.classList[4]);
+        if (this.classList[4]=="Cannon")
+        {
+            for(var i=-1;i<=1;i=i+2){
+                var id2=id1[0]+(parseInt(id1[1])+i).toString();
+                try{
+                    var newDiv=document.getElementById(id2);
+                    if (id2!=id1)
+                        {   
+                            if (newDiv.innerHTML==="")
+                            {
+                               newDiv.style.backgroundColor="#39ff14";
+                               arrOfHighlighted.push(id2);
+                            }
+                        }
+                }
+                catch(err){
+                    continue;
+                }
+            }
+        }
+        else
+        {
+            for(var i=parseInt(id1[0])-1;(i<parseInt(id1[0])+2);i++)
+              {
+                  for(j=parseInt(id1[1])-1;(j<parseInt(id1[1])+2);j++)
+                    {       try
+                            {
+                                var id2=i.toString()+j.toString();
+                                var newDiv=document.getElementById(id2);
+                                
+                               
+                                if (id2!=id1)
+                                {   
+                                    if (newDiv.innerHTML==="")
+                                    {
+                                       newDiv.style.backgroundColor="#39ff14";
+                                       arrOfHighlighted.push(id2);
+                                    }
+                                }
+                    
+                            }
+                            catch(err){
+                                continue;
+                            }
+                    }
+                            
+            }
+            if (this.classList[4]=="Ricochet" || this.classList[4]=="Semi-Ricochet")
+                {   if (this.classList[4]=="Semi-Ricochet"){
+                    document.getElementById("rr").style.visibility="visible";
+                    document.getElementById("rl").style.visibility="visible";}
+                    else{
+                        document.getElementById("rotate").style.visibility="visible";
+                    }
+                }
+        }
+
+        //make movements
+        movements(arrOfHighlighted,id1);
+            
+}
+function reset(){
+    controller.abort();
+    highlightBoxes();
+}
+function movements(arrOfHighlighted,id1){
+    const controller=new AbortController();
+    const {signal}=controller;
+    var AorB=document.getElementById(id1).classList[3];            
+    if (document.getElementById(id1).classList[4]=="Ricochet" || document.getElementById(id1).classList[4]=="Semi-Ricochet")
+        {   
+            if (document.getElementById(id1).classList[4]=="Semi-Ricochet")
+                {
+                    document.getElementById("rr").addEventListener("click",function(){
+                        rotateright(id1,arrOfHighlighted);controller.abort();
+                        highlightBoxes();move_bullet(document.getElementById(id1).classList[3]);
+                         },{signal});
+                    document.getElementById("rl").addEventListener("click",function(){
+                        rotateleft(id1,arrOfHighlighted);
+                        controller.abort();
+    highlightBoxes();move_bullet(document.getElementById(id1).classList[3]); },{signal});
+                }
+            else{
+                    document.getElementById("rotate").addEventListener("click",function(){
+                            rotate(id1,arrOfHighlighted);
+                            controller.abort();
+    highlightBoxes();move_bullet(document.getElementById(id1).classList[3]);
+                    },{signal});
+                }
+                   
+         
+        }
+    
+    for(var i=0;i<arrOfHighlighted.length;i++){
+        document.getElementById(arrOfHighlighted[i]).addEventListener("click",function(){
+            var id2=this.id;
+            blackey(id2,arrOfHighlighted,id1);
+            controller.abort();
+            highlightBoxes();
+            alert(document.getElementById(id2).classList[3]);
+            move_bullet(document.getElementById(id2).classList[3]);
+           
+        },{signal}
+        );
+        
+        
+    }
+    
+    
+}
+function rotate(id1,arrOfHighlighted){
+    var element=document.getElementById(id1);
+    var AorB=element.classList[3];
+    if (AorB=='A'){
+        current_rotation_ricochetA=current_rotation_ricochetA+90;
+        document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_ricochetA+"deg)";
+        var angle=current_rotation_ricochetA;
+    }
+    else{
+        current_rotation_ricochetB=current_rotation_ricochetB+90;
+        document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_ricochetB+"deg)";
+        var angle=current_rotation_ricochetB;
+    }
+    if (angle%180==0){
+        element.classList.replace(element.classList[5],'NE');
+    }
+    else{
+        element.classList.replace(element.classList[5],'NW');
+    }
+    document.getElementById("rotate").style.visibility="hidden";
+    for(var j=0;j<arrOfHighlighted.length;j++)
+        {               
+          document.getElementById(arrOfHighlighted[j]).style.backgroundColor="black";      
+         }
+}
+function rotateleft(id1,arrOfHighlighted){
+    var AorB=document.getElementById(id1).classList[3];
+    if (AorB=='A'){
+        current_rotation_semiricochetA=current_rotation_semiricochetA-90;
+    document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_semiricochetA+"deg)";
+        var angle=current_rotation_semiricochetA;
+    }
+    else{
+        current_rotation_semiricochetB=current_rotation_semiricochetB-90;
+    document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_semiricochetB+"deg)";
+        var angle=current_rotation_semiricochetB;
+    }
+    element=document.getElementById(id1);
+    if (angle%360==0){
+        element.classList.replace(element.classList[5],'NE');
+    }
+    else if((angle-180)%360==0){
+        element.classList.replace(element.classList[5],'SW');
+    }
+    else if((angle-90)%360==0){
+        element.classList.replace(element.classList[5],'SE');
+    }
+    else if((angle+90)%360==0){
+       element.classList.replace(element.classList[5],'NW');
+    }
+    document.getElementById("rl").style.visibility="hidden";
+    document.getElementById("rr").style.visibility="hidden";
+    for(var j=0;j<arrOfHighlighted.length;j++)
+        {               
+          document.getElementById(arrOfHighlighted[j]).style.backgroundColor="black"; 
+                      
+         }
+    
+}
+
+function rotateright(id1,arrOfHighlighted){
+    var AorB=document.getElementById(id1).classList[3];
+    if (AorB=='A'){
+        current_rotation_semiricochetA=current_rotation_semiricochetA+90;
+    document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_semiricochetA+"deg)";
+    var angle=current_rotation_semiricochetA;
+    }
+    else{
+        current_rotation_semiricochetB=current_rotation_semiricochetB+90
+    document.getElementById(id1).children[0].style.transform="rotate("+current_rotation_semiricochetB+"deg)";
+    var angle=current_rotation_semiricochetB;
+    }
+    element=document.getElementById(id1);
+    if (angle%360==0){
+        element.classList.replace(element.classList[5],'NE');
+    }
+    else if((angle-180)%360==0){
+        element.classList.replace(element.classList[5],'SW');
+    }
+    else if((angle-90)%360==0){
+        element.classList.replace(element.classList[5],'SE');
+        
+    }
+    else if((angle+90)%360==0){
+       element.classList.replace(element.classList[5],'NW');
+    }
+    
+    document.getElementById("rl").style.visibility="hidden";
+    document.getElementById("rr").style.visibility="hidden";
+    for(var j=0;j<arrOfHighlighted.length;j++)
+        {               
+          document.getElementById(arrOfHighlighted[j]).style.backgroundColor="black";          
+         }
+         
+    
+}
+
+function blackey(id,arrOfHighlighted,id1)
+ {     // for(var i=0;i<arrOfHighlighted.length;i++)
+//         {
+//             document.getElementById(arrOfHighlighted[i]).removeEventListener("click",function(){var id2=this.id;
+//             blackey(id2,arrOfHighlighted,id1);
+//         console.log("removed");});
+//         }
+    // elem=document.querySelector(event);
+            // var id=this.id;   
+        //  alert(id);  
+         for(var i=0;i<arrOfHighlighted.length;i++)
+            {  // console.log(i);
+                if (arrOfHighlighted[i]==id)
+                    {
+                         //image shifting
+                            var img1=document.getElementById(id1).innerHTML;
+                            document.getElementById(id1).innerHTML="";
+                            console.log("image lost from "+id1);
+                            document.getElementById(id).innerHTML=img1;
+                            console.log("image moved to"+id);
+                              
+                         //class name shifting
+                            var piece1=document.getElementById(id1).classList[3];
+                            var piece2=document.getElementById(id1).classList[4];
+                            if (piece2=='Ricochet' || piece2=='Semi-Ricochet'){
+                                var piece3=document.getElementById(id1).classList[5];
+                                console.log(piece3);
+                                }
+                            document.getElementById(id1).className=(document.getElementById(id1).className).slice(0,11);
+                            document.getElementById(id).className=document.getElementById(id).className+" "+piece1+" "+piece2;
+                            if (piece2=='Ricochet' || piece2=='Semi-Ricochet'){
+                            document.getElementById(id).className=document.getElementById(id).className+" "+piece3;}
+                            // alert(document.getElementById(id).className);
+                            // alert(document.getElementById(id1).className);
+                            //break
+                            // alert(id);
+                            //incase if it is cannon -shift of bullet
+
+                            
+                            if (piece2=='Cannon'){
+                                if (piece1=='A'){
+                                    // alert(id[1]);
+                                    var ba=document.getElementById('ballA');
+                                    
+                                    ba.className=ba.className.slice(0,4)+id[1];
+                                   
+                                    move_buttonA();
+                                }
+                                else{
+                                    var bb=document.getElementById('ballB');
+                                 
+                                    bb.className=bb.className.slice(0,4)+id[1];
+                                    
+                                    move_buttonB();
+                                }
+                            }
+                            
+                    }
+                document.getElementById(arrOfHighlighted[i]).style.backgroundColor="black";
+                document.getElementById(arrOfHighlighted[i]).removeEventListener("click",function(){var id2=this.id;
+                        blackey(id2,arrOfHighlighted,id1);
+                        });
+                        console.log("removed");
+            }
+
+                    document.getElementById("rr").style.visibility="hidden";
+                    document.getElementById("rl").style.visibility="hidden";
+                    document.getElementById("rotate").style.visibility="hidden";
+                
+            // for(var j=0;j<arrOfHighlighted.length;j++)
+            //     {               
+            //       document.getElementById(arrOfHighlighted[j]).style.backgroundColor="black"; 
+                              
+            //      }
+            
+        //  defaultBlockColor();
+        //Change color
+        
+        // if (i==arrOfHighlighted.length){
+        //     document.querySelectorAll(".block").forEach(item =>{item.removeEventListener("click",blackey)})
+        //     document.querySelectorAll(".A").forEach(item =>{item.removeEventListener("click",pinky)});
+        //     document.querySelectorAll(".B").forEach(item =>{item.removeEventListener("click",pinky)});
+            
+        // }
+        
+        // highlightBoxes();
+            // document.querySelectorAll(".block").forEach(item =>{item.removeEventListener("click",blackey)})
+        // if (i==arrOfHighlighted.length){
+        //     pinky();
+        // }  
+      
+}    
+
+highlightBoxes();
+//Just practise
+// var string="hello"
+// string=string.slice(0,3)+'r'+string.slice(4);
+// alert(string);
+function move_bullet(AorB){
+    if (AorB=='A')
+    {   ba=document.getElementById("ballA");
+        col_no=ba.className[4];
+        var box_no=check_no_of_boxes_ahead_A();
+        if ((box_no)>=0){
+            var id=(box_no).toString()+(col_no).toString();
+        }
+        var next_what=check_if_rico_then_to_where(id,'A');
+        dummy_A(box_no,next_what);
+    }
+    else if (AorB=='B'){
+        var box_no=check_no_of_boxes_ahead_B();
+        dummy_B(box_no);
+    }
+}
+function check_no_of_boxes_ahead_A(){
+    ba=document.getElementById("ballA");
+    col_no=ba.className[4];
+    var i=6;
+    while(i>0){
+        id=(i).toString()+(col_no).toString();
+        element=document.getElementById(id);
+        if(element.innerHTML!='')
+            {return i;}
+        i--;
+    }
+    return i;
+}
+
+function check_no_of_boxes_ahead_B(){
+    bb=document.getElementById("ballB");
+    col_no=bb.className[4];
+    var i=1;
+    while(i<7){
+        id=(i).toString()+(col_no).toString();
+        element=document.getElementById(id);
+        if(element.innerHTML!='')
+            {return i;}
+        i++;
+    }
+    return i;
+}
+function dummy_A(box_no,next_what)
+{
+    ba=document.getElementById("ballA");
+    if(next_what==false)
+    {
+        var distance=(6-box_no);
+        var duration=distance*0.5;
+        ba.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+        ba.style.transform='translateY('+((6-box_no)*75+30).toString()+'px)';
+        ba.style.visibility='hidden';
+        setTimeout(()=>{
+            ba.style.transform='';
+            ba.style.transition='';
+            ba.style.visibility='visible';
+            console.log("hello");
+            move_buttonA();
+        }, (duration+0.5)*1000);
+    }
+    else if(next_what=='L'){
+        var distance=(6-box_no);
+        var duration=distance*0.5;
+        ba.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+        ba.style.transform='translateY('+((6-box_no)*75+65).toString()+'px)';
+        left_turn('A');
+        // setTimeout(()=>{
+        //     ba.style.transform='';
+        //     ba.style.transition='';
+        //     ba.style.visibility='visible';
+        //     console.log("hello");
+        //     move_buttonA();
+        // }, (duration+0.5)*1000);
+    }
+}
+
+function dummy_B(box_no){
+    bb=document.getElementById("ballB");
+    var distance=(box_no-1);
+    var duration=distance*0.5;
+    console.log(distance);
+    console.log(duration);
+    bb.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+    bb.style.transform='translateY(-'+((box_no-1)*75+30.5).toString()+'px)';
+    bb.style.visibility='hidden';
+    setTimeout(()=>{
+        bb.style.transform='';
+        bb.style.transition='';
+        bb.style.visibility='visible';  
+        move_buttonB();
+    }, (duration+0.5)*1000);
+    
+    
+}
+
+function check_if_rico_then_to_where(id,AorB){
+    var element=document.getElementById(id);
+    
+    if (AorB=='A'){
+        if (element.classList[4]=='Ricochet'){
+            var angle=current_rotation_ricochetA;
+           if(angle%180==0)
+            {
+                return 'R';
+                //right_turn(AorB);
+            }
+            else{
+                return 'L';
+                //left_turn(AorB);
+            }
+        }
+        else if(element.classList[4]=='Semi-Ricochet'){
+            var angle=current_rotation_semiricochetA;
+            if(angle%360==0)
+                {
+                    return 'R';
+                    //right_turn(AorB);
+                }
+            else if((angle+90)%360==0){
+                  return 'L'; 
+                //left_turn(AorB);
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        if (element.classList[4]=='Ricochet'){
+            var angle=current_rotation_ricochetB;
+            if((angle%180)==0)
+                {   return 'L';
+                    //left_turn(AorB);
+                }
+                else{
+                    return 'R';
+                    //right_turn(AorB);
+                }
+        }
+        else if(element.classList[4]=='Semi-Ricochet'){
+            var angle=current_rotation_semiricochetB;
+            if((angle-90)%360==0){
+                return 'R';
+                //right_turn(AorB);
+            }
+            else if((angle-180)%360==0){
+                return 'L';
+                //left_turn(AorB);
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }  
+}
+
+function left_turn(AorB){
+    if (AorB=='A'){
+    ba=document.getElementById("ballA");
+    ba.style.transition=ba.style.transition+',translateX s linear';
+    // ba.style.transform='translateX(-'+-----+'px';
+    check_boxes
+    }
+}

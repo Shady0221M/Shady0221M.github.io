@@ -1,0 +1,174 @@
+Code_removed
+
+
+function move_bullet(AorB){
+    if (AorB=='A')
+    {   ba=document.getElementById("ballA");
+        col_no=ba.className[4];
+        var box_no=check_no_of_boxes_ahead_A();
+        if ((box_no)>=0){
+            var id=(box_no).toString()+(col_no).toString();
+        }
+        var next_what=check_if_rico_then_to_where(id,'A');
+        dummy_A(box_no,next_what);
+    }
+    else if (AorB=='B'){
+        var box_no=check_no_of_boxes_ahead_B();
+        dummy_B(box_no);
+    }
+}
+function check_no_of_boxes_ahead_A(){
+    ba=document.getElementById("ballA");
+    col_no=ba.className[4];
+    var i=6;
+    while(i>0){
+        id=(i).toString()+(col_no).toString();
+        element=document.getElementById(id);
+        if(element.innerHTML!='')
+            {return i;}
+        i--;
+    }
+    return i;
+}
+
+function check_no_of_boxes_ahead_B(){
+    bb=document.getElementById("ballB");
+    col_no=bb.className[4];
+    var i=1;
+    while(i<7){
+        id=(i).toString()+(col_no).toString();
+        element=document.getElementById(id);
+        if(element.innerHTML!='')
+            {return i;}
+        i++;
+    }
+    return i;
+}
+function dummy_A(box_no,next_what)
+{
+    ba=document.getElementById("ballA");
+    if(next_what==false)
+    {
+        var distance=(6-box_no);
+        var duration=distance*0.5;
+        ba.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+        ba.style.transform='translateY('+((6-box_no)*75+30).toString()+'px)';
+        ba.style.visibility='hidden';
+        setTimeout(()=>{
+            ba.style.transform='';
+            ba.style.transition='';
+            ba.style.visibility='visible';
+            console.log("hello");
+            move_buttonA();
+        }, (duration+0.5)*1000);
+    }
+    else if(next_what=='L'){
+        var distance=(6-box_no);
+        var duration=distance*0.5;
+        ba.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+        ba.style.transform='translateY('+((6-box_no)*75+65).toString()+'px)';
+        left_turn('A');
+        // setTimeout(()=>{
+        //     ba.style.transform='';
+        //     ba.style.transition='';
+        //     ba.style.visibility='visible';
+        //     console.log("hello");
+        //     move_buttonA();
+        // }, (duration+0.5)*1000);
+    }
+}
+
+function dummy_B(box_no){
+    bb=document.getElementById("ballB");
+    var distance=(box_no-1);
+    var duration=distance*0.5;
+    console.log(distance);
+    console.log(duration);
+    bb.style.transition='transform '+duration.toString()+'s linear,visibility '+(duration+0.5).toString()+'s step-end';
+    bb.style.transform='translateY(-'+((box_no-1)*75+30.5).toString()+'px)';
+    bb.style.visibility='hidden';
+    setTimeout(()=>{
+        bb.style.transform='';
+        bb.style.transition='';
+        bb.style.visibility='visible';  
+        move_buttonB();
+    }, (duration+0.5)*1000);
+    
+    
+}
+
+function check_if_rico_then_to_where(id,AorB){
+    var element=document.getElementById(id);
+    
+    if (AorB=='A'){
+        if (element.classList[4]=='Ricochet'){
+            var angle=current_rotation_ricochetA;
+           if(angle%180==0)
+            {
+                return 'R';
+                //right_turn(AorB);
+            }
+            else{
+                return 'L';
+                //left_turn(AorB);
+            }
+        }
+        else if(element.classList[4]=='Semi-Ricochet'){
+            var angle=current_rotation_semiricochetA;
+            if(angle%360==0)
+                {
+                    return 'R';
+                    //right_turn(AorB);
+                }
+            else if((angle+90)%360==0){
+                  return 'L'; 
+                //left_turn(AorB);
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        if (element.classList[4]=='Ricochet'){
+            var angle=current_rotation_ricochetB;
+            if((angle%180)==0)
+                {   return 'L';
+                    //left_turn(AorB);
+                }
+                else{
+                    return 'R';
+                    //right_turn(AorB);
+                }
+        }
+        else if(element.classList[4]=='Semi-Ricochet'){
+            var angle=current_rotation_semiricochetB;
+            if((angle-90)%360==0){
+                return 'R';
+                //right_turn(AorB);
+            }
+            else if((angle-180)%360==0){
+                return 'L';
+                //left_turn(AorB);
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }  
+}
+
+function left_turn(AorB){
+    if (AorB=='A'){
+    ba=document.getElementById("ballA");
+    ba.style.transition=ba.style.transition+',translateX s linear';
+    // ba.style.transform='translateX(-'+-----+'px';
+    check_boxes
+    }
+}
