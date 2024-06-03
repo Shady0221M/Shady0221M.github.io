@@ -26,7 +26,7 @@ function setupOuterFrameCB(){
     var newDiv=document.createElement("div");
     newDiv.style.backgroundColor="black";
     newDiv.style.position='relative';
-    newDiv.style.border="10px solid deeppink";
+    newDiv.style.border="3px solid deeppink";
     var parent=document.querySelector("body");
     parent.appendChild(newDiv);
     newDiv.className='container';
@@ -46,8 +46,8 @@ function  setupInnerBlocks(){
                     newDiv.setAttribute('id',(i).toString()+(j).toString());
                     
                     document.querySelector(".container").appendChild(newDiv);
-                    newDiv.style.width='70px';
-                    newDiv.style.height='70px';
+                    newDiv.style.width='10.52vh';
+                    newDiv.style.height='10.52vh';
                     newDiv.style.position='relative';
                     // newDiv.style.opacity='1';
                     newDiv.style.backgroundColor='black';
@@ -58,7 +58,7 @@ function  setupInnerBlocks(){
     body.style.display='flex';
     body.style.justifyContent="center";
     container.style.display="grid";
-    container.style.grid="repeat(8,70px) / repeat(8,70px)";
+    container.style.grid="repeat(8,10.52vh) / repeat(8,10.52vh)";
     container.style.columnGap="5px";
     container.style.rowGap="5px";
 }
@@ -99,8 +99,8 @@ function setupPieces(){
     var image=document.querySelectorAll("img");
     for  (var i=0;i<image.length;i++)
         {
-            image[i].style.height='70px';
-            image[i].style.width='70px';
+            image[i].style.height='10.52vh';
+            image[i].style.width='10.52vh';
              
         }
     document.getElementById("CannonA").style.zIndex='2';
@@ -109,15 +109,15 @@ function setupPieces(){
     document.getElementById("CannonB").style.position='absolute';
     document.querySelector(".ballB").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:28.5px;bottom:27.5px;z-index:1;";
     document.querySelector(".ballA").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:27px;top:23.5px;z-index:1;";
-    document.querySelector('.rotate').style.left='90px';
+    document.querySelector('.rotate').style.left='10vw';
     var container=document.querySelector(".container");
     container.style.position='relative';
-    container.style.left='-150px';
-    container.style.top='40px';
+    container.style.left='-10vw';
+    container.style.top='6vh';
     document.body.style.backgroundColor='#B6FFFA';
-    document.getElementById('pause').style.left='300px';
-    document.getElementById('undo').style.left='400px';
-    document.getElementById('redo').style.left='500px';
+    // document.getElementById('pause').style.left='300px';
+    // document.getElementById('undo').style.left='400px';
+    // document.getElementById('redo').style.left='500px';
     //background-image: linear-gradient(144deg,#FE1F4E, #D1FE49 50%,#FBB23F);
 }
 
@@ -143,17 +143,17 @@ function setUpTimer(AorB){
     document.body.appendChild(timer);
     timer.id='timer'+AorB;
     timer.style.position='relative';
-    timer.style.width='150px';
-    timer.style.height='60px';
+    timer.style.width='7.81vw';
+    timer.style.height='9.02vh';
     timer.style.backgroundColor='#E8FFCE';
     timer.style.border="1px solid black";
-    if (AorB=='A'){timer.style.left='-900px';}
-    else{timer.style.left='-150px';}
+    if (AorB=='A'){timer.style.left='-67vw';}
+    else{timer.style.left='-14.5vw';}
     timer.innerHTML='05:00';
     timer.style.fontSize='40px';
     timer.style.display='flex';
     timer.style.justifyContent='center';
-    timer.style.paddingTop='10px';  
+    timer.style.paddingTop='1.5vh';  
     // timer.style.visibility='hidden'; 
 
 }
@@ -223,7 +223,7 @@ function end_of_game(){
     var div=document.getElementById('game_over');
     div.style.visibility='visible';
     document.querySelector('.winner').innerHTML=toggle_turn+' is the Winner';
-    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 320px;left: 120px;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
+    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 48.12vh;left: 9.375vw;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
     document.getElementById('playAgain').addEventListener('click',resetGamePlay);
     document.getElementById('replay').style.opacity='0.2';
     document.getElementById('replay').style.fontSize='10px';

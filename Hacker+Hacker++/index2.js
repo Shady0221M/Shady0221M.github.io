@@ -125,8 +125,8 @@ function setupPieces(){
     // document.getElementById('rl').style.cssText='';
     var container=document.querySelector(".container");
     container.style.position='relative';
-    container.style.left='-250px';
-    container.style.top='40px';
+    container.style.left='-10vw';
+    container.style.top='6vh';
     document.body.style.backgroundColor='#F8F4E1';
     //background-image: linear-gradient(144deg,#FE1F4E, #D1FE49 50%,#FBB23F);
 }
@@ -151,9 +151,9 @@ function setUpTimer(AorB){
     var timer=document.createElement('p');
     document.body.appendChild(timer);
     timer.id='timer'+AorB;
-    timer.style.cssText='position:relative;width:100px;height:70px;padding:0px;margin:0px;background-color:#FFD0D0;border:1px solid black;top:40px';
-    if (AorB=='A'){timer.style.left='-1000px';}
-    else{timer.style.left='-280px';}
+    timer.style.cssText='position:relative;width:100px;height:70px;padding:0px;margin:0px;background-color:#FFD0D0;border:1px solid black;top:6vh';
+    if (AorB=='A'){timer.style.left='-67vw';}
+    else{timer.style.left='-14.5vw';}
     timer.innerHTML='05:00';
     timer.style.fontSize='40px';
     timer.style.display='flex';
@@ -237,7 +237,7 @@ function end_of_game(){
     var div=document.getElementById('game_over');
     div.style.visibility='visible';
     document.querySelector('.winner').innerHTML=toggle_turn+' is the Winner';
-    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 320px;left: 120px;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
+    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 48.12vh;left: 9.37vw;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
     document.getElementById('playAgain').addEventListener('click',resetGamePlay);
     document.getElementById('replay').addEventListener('click',replayGame);
 }
@@ -511,7 +511,7 @@ function history_update()
         if ((history_of_moves[i])[1]=='rotate'||(history_of_moves[i])[1]=='rl'||(history_of_moves[i])[1]=='rr')
             {   
                 if ((history_of_moves[i])[1]=='rotate')
-                    {document.getElementById('history').innerHTML+=history_of_moves[i][0]+' rotated<br>>';}
+                    {document.getElementById('history').innerHTML+=history_of_moves[i][0]+' rotated<br>';}
                 else if((history_of_moves[i])[1]=='rl')
                     {document.getElementById('history').innerHTML+=history_of_moves[i][0]+' rotated left<br>';}
                 else
@@ -527,7 +527,7 @@ function history_update()
             }   
         if (history_of_moves[i][3]!='')
         {
-            document.getElementById('history').innerHTML+='Semi-Ricochet of'+history_of_moves[i][4][1]+'is destroyed <br>';
+            document.getElementById('history').innerHTML+='Semi-Ricochet of '+history_of_moves[i][4][1]+'is destroyed <br>';
         }
     }
 }
