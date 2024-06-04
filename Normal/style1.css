@@ -1,6 +1,4 @@
-*{
-  box-sizing:border-box;
-}
+
 .rotate{
   display:flex;
   flex-direction: column;
@@ -87,8 +85,6 @@
   position: absolute;
     height: 60vh;
     width: 60vh;
-    background-image:url('/resources/images/background_image/Cannon_tank.jpg');
-    background-size:cover;
     top: 20vh;
     left: 35.5vw;
     z-index: 3;

@@ -10,8 +10,11 @@ var second_click=false;
 var is_game_paused=false;
 var game_state;
 var pause_3_cp='nothing';
+var flag2=false;
+var l_n;
 var initial_id_play;
 var arr_id_play;
+var array_swap_ids;
 var destroy=false;
 var flag;
 var mark;
@@ -22,6 +25,8 @@ var move_or_rotate_array=[];
 var history_of_moves=[];
 var redo_if_needed=[];
 var removed_element=[];
+
+var audioElement1;
 
 var body=document.querySelector("body");
 var container=document.querySelector(".container");
@@ -64,12 +69,11 @@ function  setupInnerBlocks(){
     container.style.grid="repeat(8,70px) / repeat(8,70px)";
     container.style.columnGap="5px";
     container.style.rowGap="5px";
-    console.log("done");
     const  audioElement=document.createElement('audio');
     audioElement.src='/resources/audio/Game_theme_song.mp3';
-    // document.querySelector('audio').display='none';
     body.appendChild(audioElement);
-    //deeppink
+    
+    
 }
 
 function clearBoard(){
@@ -112,8 +116,8 @@ function setupPieces(){
             image[i].style.width='70px';
              
         }
-    document.getElementById("CannonA").style.zIndex='2';
-    document.getElementById("CannonB").style.zIndex='2';    
+    document.getElementById("CannonA").style.zIndex='1';
+    document.getElementById("CannonB").style.zIndex='1';    
     document.getElementById("CannonA").style.position='absolute';
     document.getElementById("CannonB").style.position='absolute';
     document.querySelector(".ballB").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:330px;top:555px;z-index:1;";
@@ -413,12 +417,7 @@ function resetGamePlay(){
     document.getElementById('game_over').style.visibility='hidden';
     document.getElementById('reset').removeEventListener('click',resetGamePlay);
     document.getElementById('play').removeEventListener('click',resetGamePlay);
-    document.getElementById('timerB').style.visibility='hidden';
-    document.getElementById('moves_played').style.visibility='hidden';
-    document.getElementById('undo').style.visibility='hidden';
-    document.getElementById('redo').style.visibility='hidden';
-    document.getElementById('pause').style.visibility='hidden';
-    document.getElementById('timerA').style.visibility='hidden';
+    document.getElementById('history').innerHTML='';
     history_of_moves.splice(0);
     redo_if_needed.splice(0);
     is_game_paused=true;
@@ -480,6 +479,10 @@ function pauseGamePlay(){
     else if (game_state==2){
         mark=2;controller.abort();
     }
+    else if(game_state==3){//console.log("Ping");
+    //ba=document.querySelector(".ballA");
+    //console.log('top:'+ba.style.top+' left:'+ba.style.left);
+}
     document.getElementById('play').addEventListener('click',playGamePlay);
     document.getElementById('reset').addEventListener('click',resetGamePlay);
 }
@@ -496,12 +499,13 @@ async function playGamePlay(){
         else{timerIdB=setInterval(RunB,1000);}
 
         if (game_state==1){highlightBoxes();}
-        else if (game_state==2){mark=2;movements(arr_id_play,initial_id_play);
+        else if (game_state==2){mark=2;movements(arr_id_play,initial_id_play,array_swap_ids);
         }
     }
-    else if (game_state==3){flag=2;await one_move_over();}
+    else if (game_state==3){flag=2;
+    await one_move_over(arr_id_play,array_swap_ids);}
 }
-    
+
 //******************************************************************************************************************/
 function history_update()
 {   document.getElementById('history').innerHTML='';
@@ -651,18 +655,18 @@ function pinky()
         movements(arrOfHighlighted,id1,array_swap_ids);
  
 }
-async function move_bullet_with_promise(toggle_turn, id) {
+async function move_bullet_with_promise(toggle_turn) {
     return new Promise((resolve) => {
         setTimeout(async () => {
-            const  audioElement=document.createElement('audio');
-            await move_bullet(toggle_turn, id);
+            await move_bullet(toggle_turn);
             resolve();
         }, 200);
     });
 }
 async function one_move_over(arrOfHighlighted,array_swap_ids) {
     second_click = false;
-    try {
+    try 
+    {
         for(var j=0;j<arrOfHighlighted.length;j++)
             {               
               document.getElementById(arrOfHighlighted[j]).style.backgroundColor="black";         
@@ -671,33 +675,22 @@ async function one_move_over(arrOfHighlighted,array_swap_ids) {
             {
                 document.getElementById(array_swap_ids[j]).style.backgroundColor="black";
             }
-            const  audioElement=document.createElement('audio');
-            audioElement.src='/resources/audio/Bullet_fire.mp3';
-            // audioElement.controls=true;
-            body.appendChild(audioElement);
-            audioElement.play();
-            
+            const  audioElement1=document.createElement('audio');
+            audioElement1.src='/resources/audio/Bullet_fire.mp3';
+            body.appendChild(audioElement1);
+            audioElement1.play();
             
         if (toggle_turn == 'A') {
             var ba=document.querySelector(".ballA");
             ba.style.visibility='visible';
             var newDiv = document.querySelector(".A.Cannon");
-            move_buttonA();
-            if (flag==1)
-            {   
-                await move_bullet_with_promise('A', newDiv.id);}
-            else if (flag==2)
-            {await move_bullet_with_promise('A',pause_3_cp);}
+            await move_bullet_with_promise('A');
             
         } else {
             var bb=document.querySelector(".ballB");
             bb.style.visibility='visible';
             var newDiv = document.querySelector(".B.Cannon");
-            move_buttonB();
-            if (flag==1)
-                {await move_bullet_with_promise('B', newDiv.id);}
-            else if (flag==2)
-                {await move_bullet_with_promise('B',pause_3_cp);}
+            await move_bullet_with_promise('B');
         }
 
         if (!is_game_paused) {
@@ -796,15 +789,16 @@ function movements(arrOfHighlighted,id1,array_swap_ids){
         }
     
     for(var i=0;i<arrOfHighlighted.length;i++){
-        document.getElementById(arrOfHighlighted[i]).addEventListener("click",function(){
+        document.getElementById(arrOfHighlighted[i]).addEventListener("click", async function(){
             game_state=3;
             controller1.abort();
             if (!is_game_paused){
                 second_click=true;pause_timer();
                 var id2=this.id;
                 blackey(id1,id2);
-                flag=1;
-                one_move_over(arrOfHighlighted,array_swap_ids);
+                flag=1;//console.log("Entered");
+                 await one_move_over(arrOfHighlighted,array_swap_ids);
+                
             }
             
         },{signal}
@@ -1087,204 +1081,101 @@ function check_element_in_given_id(id,c_p,b_s){
     else {return false;}
 }
 
-async function move_bullet(AorB, c_p) {
+async function move_bullet(AorB){
     return new Promise((resolve, reject) => {
-        try {
-            var duration,j=0;
-            if (AorB == 'A') {
-                var ba = document.querySelector('.ballA');
-                var b_s = ba.classList[2];
-                var bullet=document.getElementById('bulletA');
-            } else {
-                var ba = document.querySelector('.ballB');
-                var b_s = ba.classList[2];
-                var bullet=document.getElementById('bulletB');
-            }
-            var a = boxes_ahead(c_p, b_s);
+        try 
+        {
+            var duration;var j=2;
+            ba=document.querySelector('.ball'+AorB);
+            var b_s=ba.classList[2];
+            var bullet=document.getElementById('bullet'+AorB);
+            var r_n = 7-(Math.floor(parseInt(ba.style.top)/75));
+            var c_n = (Math.floor(parseInt(ba.style.left)/75));
+            c_p=(r_n).toString()+(c_n).toString();
+            var a = boxes_ahead(c_p,b_s);
             var i = a[0];
-            var id = a[1];
-            var r_n = parseInt(c_p[0]);
-            var c_n = parseInt(c_p[1]);
+            var id = a[1];var k=false;
+            if (id != 'nothing') {
+                k = check_element_in_given_id(id,c_p,b_s);
+                var left_target=parseInt(id[1])*75;
+                var top_target=(7-parseInt(id[0]))*75;
+            }
             if (b_s == 'right') {
+                if (id=='nothing'){var left_target=(i*75)}
+                else if (k!=false){var left_target=left_target+35;}
                 bullet.style.transform="rotate(-90deg)";
                 bullet.style.top='0px';
                 bullet.style.left='0px';
-                duration = ((i - c_n - 1)*75+35)*5;
-                var value=parseInt(ba.style.left);
-                var k = false;
-                if (id != 'nothing') {
-                    k = check_element_in_given_id(id, c_p, b_s);
-                }
-                if (!k) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.left=value+j+'px';
-                        j=j+5;
-                        
-                        if (((j-35)/75) > (i - c_n - 1)) {
-                            clearInterval(ta);   
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                } else if (k != false) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.left=value+j+'px';
-                        j=j+5;
-                        
-                        if (((j)/75) > (i - c_n)) {
-                            clearInterval(ta);
-                            
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                }
+                
+                var value=left_target-parseInt(ba.style.left);//speed=0.2
+                duration =value*(2.5);console.log('duration:'+duration);
+                var ta;
+                ta=setInterval(()=>
+                {   
+                    ba.style.left=parseInt(ba.style.left)+j+'px';
+                    if (parseInt(ba.style.left)>=left_target){clearInterval(ta)}
+                    if (is_game_paused){clearInterval(ta);resolve();}
+                },5);
             } else if (b_s == 'left') {
+                if (id=='nothing'){var left_target=0}
+                else if(k!=false){var left_target=left_target+35}
+                else{var left_target=left_target+75}
                 bullet.style.transform="rotate(90deg)";
                 bullet.style.top='0px';
                 bullet.style.left='0px';
-                duration = ((c_n - i - 1)*75+35)* 5;
-                var k = false;
-                value=parseInt(ba.style.left);
-                if (id != 'nothing') {
-                    k = check_element_in_given_id(id, c_p, b_s);
-                    
-                }
-                if (!k) {;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.left=value-j+'px';
-                        j=j+5;
-                       if (((j-35)/75) > (c_n - i - 1)) {
-                            clearInterval(ta);
-                            
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                } else if (k != false) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.left=value-j+'px';
-                        j=j+5;
-                        if (((j)/75) > (c_n - i)) {
-                            clearInterval(ta);
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                }
-            } else if (b_s == 'up') {
+                var value=parseInt(ba.style.left)-left_target;
+                duration=value*(2.5);console.log('duration:'+duration);
+                var ta;
+                ta=setInterval(()=>
+                {
+                    ba.style.left=parseInt(ba.style.left)-j+'px';
+                    if(parseInt(ba.style.left)<=left_target){clearInterval(ta)}
+                    if (is_game_paused){clearInterval(ta);resolve();}
+                },5);
+            } 
+            else if (b_s == 'up') 
+                {
+                    if(id==='nothing'){top_target=0}
+                    else if (k!=false){var top_target=top_target+35}
+                    else{var top_target=top_target+75}
                 bullet.style.transform="rotate(180deg)";
                 bullet.style.top='-10px';
                 bullet.style.left='10px';
-                var duration = ((i - r_n - 1)*75+35) * 5;
-                var k = false;
-                value=parseInt(ba.style.top);
-                if (id != 'nothing') {
-                    k = check_element_in_given_id(id, c_p, b_s);
-                    
-                }
-                if (!k) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.top=value-j+'px';
-                        j=j+5;
-                        if (((j-35)/75) > (i - r_n - 1)) {
-                            clearInterval(ta);
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                } else if (k != false) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.top=value-j+'px';
-                        j=j+5;
-                        if (((j)/75) > (i - r_n)) {
-                            clearInterval(ta);
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                }
-            } else if (b_s == 'down') {
+                var value=parseInt(ba.style.top)-top_target;
+                var duration =value*(2.5);
+                var ta;
+                ta=setInterval(()=>
+                {
+                    ba.style.top=(parseInt(ba.style.top)-j)+'px';
+                    if (parseInt(ba.style.top)<=top_target){clearInterval(ta)}
+                    if (is_game_paused){clearInterval(ta);resolve();}
+                },5);
+
+            } 
+            else if (b_s == 'down') {
+                if (id=='nothing'){top_target=8*75}
+                else if (k!=false){var top_target=top_target+30}
                 bullet.style.transform="rotate(0deg)";
                 bullet.style.top='-5px';
                 bullet.style.left='-10px';
-                duration = ((r_n - i - 1)*75+35)* 5; // 0.25
-                var k = false;
-                var value=parseInt(ba.style.top);
-                if (id != 'nothing') {
-                    k = check_element_in_given_id(id, c_p, b_s);
-                    
-                }
-                if (!k) {
-                    var ta ;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.top=value+j+'px';
-                        j=j+5;
-                        if (((j-35)/75) > (r_n - i - 1)) {
-                           clearInterval(ta);
-                        }
-                        if (is_game_paused) {
-                            clearInterval(ta);
-                            pause_3_cp = new_id;resolve();
-                        } // mark2
-                    }, 25);
-                } else if (k != false) {
-                    var ta;
-                    var new_id = c_p;
-                    pause_3_cp = new_id; // mark1
-                    ta = setInterval(() => {
-                        ba.style.top=value+j+'px';
-                        j=j+5;
-                        if (((j)/75) > (r_n - i)) {
-                            clearInterval(ta);
-                        }
-                        if (is_game_paused) {
-                            pause_3_cp = new_id;
-                            clearInterval(ta);resolve();
-                        } // mark2
-                    }, 25);
-                }
+                var value=top_target-parseInt(ba.style.top);//speed=0.2
+                duration =value*(2.5);var ta;
+                ta=setInterval(()=>
+                {
+                    ba.style.top=parseInt(ba.style.top)+j+'px';
+                    if (parseInt(ba.style.top)>=top_target){clearInterval(ta)}
+                    if (is_game_paused){clearInterval(ta);resolve();}
+                },5);
             }
-            
-            if (!k) {
-                setTimeout(async function() {
-                    if (!is_game_paused) {
-                        if (AorB == 'A') {
-                            ba.classList.replace(ba.classList[2], 'down');
-                            removed_element=['',''];
-                            if(destroy){
-                                var div=document.getElementById(id);
+            setTimeout(async function()
+            {   
+                if (!k){
+                    if (!is_game_paused){console.log("Entered pinky");
+                        if (AorB=='A'){ba.classList.replace(ba.classList[2],'down')}
+                        else{ba.classList.replace(ba.classList[2],'up')}
+                        removed_element=['',''];
+                        if (destroy){
+                            var div=document.getElementById(id);
                                 removed_element[0]=div.innerHTML;
                                 removed_element[1]=[id];
                                 div.innerHTML='';
@@ -1293,60 +1184,28 @@ async function move_bullet(AorB, c_p) {
                                removed_element[1].push(div.classList[4]);
                                removed_element[1].push(div.classList[5]);
                                div.className=div.className.slice(0,11);
-                            }
-                            ba.style.visibility='hidden';
-                            var newDiv = document.querySelector(".A.Cannon");
-                            pause_3_cp=newDiv.id;
-                            newDiv.appendChild(ba);
-                            move_buttonA();
-                            await delay(500);
-                            timerIdB = setInterval(RunB, 1000);
-                            resolve(); 
-                            
-                        } else {
-                            ba.classList.replace(ba.classList[2], 'up');
-                            removed_element=['',''];
-                            if(destroy){
-                                //remove image
-                                var div=document.getElementById(id);
-                                removed_element[0]=div.innerHTML;
-                                removed_element[1]=[id];
-                                div.innerHTML='';
-                                //remove classname
-                               removed_element[1].push(div.classList[3]);
-                               removed_element[1].push(div.classList[4]);
-                               removed_element[1].push(div.classList[5]);
-                                div.className=div.className.slice(0,11);
-                            }
-                            ba.style.visibility='hidden';
-                            var newDiv = document.querySelector(".B.Cannon");
-                            pause_3_cp=newDiv.id;
-                            newDiv.appendChild(ba);
-                            move_buttonB();
-                            await delay(500);
-                            ba.id='b'+newDiv;
-                            timerIdA = setInterval(RunA, 1000);
-                            resolve(); 
-                        }
+                        }ba.style.visibility='hidden';
+                        var newDiv = document.querySelector("."+AorB+".Cannon");
+                        pause_3_cp=newDiv.id;ba.id='b'+newDiv;
+                        newDiv.appendChild(ba);
+                        if (AorB=='A'){move_buttonA();timerIdB=setInterval(RunB,1000);resolve();}
+                        else{move_buttonB();timerIdA=setInterval(RunA,1000);resolve();}
                         destroy=false;
                     }
-                }, duration+10);
-            } else if (k!= false) {
-                setTimeout(() => {
-                    if (!is_game_paused) {
-                        b_s = k;
+                }
+                else if(k!=false){
+                    if(!is_game_paused){
+                        b_s = k;console.log('b_s:'+b_s)
                         ba.classList.replace(ba.classList[2], k);
-                        c_p = id;
-                        
                         setTimeout(() => {
-                            move_bullet_with_promise(AorB, c_p).then(resolve); 
+                            move_bullet_with_promise(AorB).then(resolve); 
                         }, 50);
                     }
-                },duration+10);
-            }
-        } catch (error) {
-            reject(error); 
+                }
+            },duration+60)
+            
         }
+        catch (error) {reject(error) }
     });
 }
 timerOn('A');
