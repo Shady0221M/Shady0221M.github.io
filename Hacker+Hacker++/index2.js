@@ -19,6 +19,7 @@ var destroy=false;
 var flag;
 var mark;
 var game_over=false;
+var flag3=false;
 
 var all_moves=[];
 var move_or_rotate_array=[];
@@ -31,50 +32,6 @@ var audioElement1;
 var body=document.querySelector("body");
 var container=document.querySelector(".container");
 var block=document.querySelectorAll(".block");
-
-//1.1Setup outer box
-function setupOuterFrameCB(){
-    var newDiv=document.createElement("div");
-    newDiv.style.position='relative';
-    newDiv.style.border="3px solid #AF8F6F";
-    var parent=document.querySelector("body");
-    parent.appendChild(newDiv);
-    newDiv.className='container';
-    newDiv.style.backgroundColor='#AF8F6F';
-   
-}
-
-//1.2Set up 64 boxes as (8x8)
-function  setupInnerBlocks(){
-    for(var i=7;i>=0;i--)
-        {
-            for(var j=0;j<=7;j++)
-                {
-                    var newDiv=document.createElement("div");
-                    newDiv.className='r'+i.toString()+' c'+j.toString()+' block';
-                    newDiv.setAttribute('id',(i).toString()+(j).toString());
-                    document.querySelector(".container").appendChild(newDiv);
-                    newDiv.style.width='70px';
-                    newDiv.style.height='70px';
-                    // newDiv.style.opacity='0.5';
-                    newDiv.style.backgroundColor='black';
-                }
-        }
-    var body=document.querySelector("body");
-    var container=document.querySelector(".container");
-    var block=document.querySelectorAll(".block");
-    body.style.display='flex';
-    body.style.justifyContent="center";
-    container.style.display="grid";
-    container.style.grid="repeat(8,70px) / repeat(8,70px)";
-    container.style.columnGap="5px";
-    container.style.rowGap="5px";
-    const  audioElement=document.createElement('audio');
-    audioElement.src='/resources/audio/Game_theme_song.mp3';
-    body.appendChild(audioElement);
-    
-    
-}
 
 function clearBoard(){
     var block=document.querySelectorAll(".block");
@@ -116,54 +73,19 @@ function setupPieces(){
             image[i].style.width='70px';
              
         }
-    document.getElementById("CannonA").style.zIndex='1';
-    document.getElementById("CannonB").style.zIndex='1';    
+    document.getElementById("CannonA").style.zIndex='2';
+    document.getElementById("CannonB").style.zIndex='2';    
     document.getElementById("CannonA").style.position='absolute';
     document.getElementById("CannonB").style.position='absolute';
     document.querySelector(".ballB").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:330px;top:555px;z-index:1;";
     document.querySelector(".ballA").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:255px;top:30px;z-index:1;";
     document.getElementById('bulletA').style.cssText='height:33.33px;width:10px;position:absolute;top:10px;left:-10px;';
     document.getElementById('bulletB').style.cssText='height:33.333px;width:10px;position:absolute;top:-33.33px;left:0px;';
-    // document.getElementById('rotate').style.cssText='';
-    // document.getElementById('rr').style.cssText='';
-    // document.getElementById('rl').style.cssText='';
-    var container=document.querySelector(".container");
-    container.style.position='relative';
-    container.style.left='-10vw';
-    container.style.top='6vh';
-    document.body.style.backgroundColor='#F8F4E1';
-    //background-image: linear-gradient(144deg,#FE1F4E, #D1FE49 50%,#FBB23F);
 }
 
-function initialsetup()
-    {
-    setupOuterFrameCB();
-    setupInnerBlocks();
-    setupPieces();
-    }
-initialsetup();
-
-function defaultBlockColor(){
-    for(var i=0;i<64;i++)
-        {
-            document.querySelectorAll(".block")[i].style.backgroundColor="black";
-        }  
-}
+setupPieces();
 //****************************************************************************************************************************** */
-//0.)Timer
-function setUpTimer(AorB){
-    var timer=document.createElement('p');
-    document.body.appendChild(timer);
-    timer.id='timer'+AorB;
-    timer.style.cssText='position:relative;width:100px;height:70px;padding:0px;margin:0px;background-color:#FFD0D0;border:1px solid black;top:6vh';
-    if (AorB=='A'){timer.style.left='-67vw';}
-    else{timer.style.left='-14.5vw';}
-    timer.innerHTML='05:00';
-    timer.style.fontSize='40px';
-    timer.style.display='flex';
-    timer.style.justifyContent='center';
-    timer.style.paddingTop='10px';  
-}
+//Timer
 
 var timeA=300;
 var timeB=300;
@@ -222,8 +144,6 @@ function pause_timer(){
         else{clearInterval(timerIdB);}
     }
 }
-setUpTimer('A');
-setUpTimer('B');
 
 //********************************************************************************************************** */
 function store_moves_to_local_storage(array) {
@@ -237,11 +157,11 @@ function get_moves_from_local_storage() {
 }
 
 function end_of_game(){
+    console.log('Game:over');
     store_moves_to_local_storage(history_of_moves);
     var div=document.getElementById('game_over');
-    div.style.visibility='visible';
+    div.style.display='block';
     document.querySelector('.winner').innerHTML=toggle_turn+' is the Winner';
-    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 48.12vh;left: 9.37vw;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
     document.getElementById('playAgain').addEventListener('click',resetGamePlay);
     document.getElementById('replay').addEventListener('click',replayGame);
 }
@@ -258,11 +178,12 @@ setUpPausePlayResetUndoRedo();
 
 async function replayGame(){
     var div=document.getElementById('game_over');
-    div.style.visibility='hidden';
+    div.style.display='none';
     var array=get_moves_from_local_storage();
     console.log(array);
     await delay(100);
     resetGamePlay();
+    
     document.getElementById('playAgain').removeEventListener('click',resetGamePlay);
     document.getElementById('replay').removeEventListener('click',replayGame);
     document.getElementById('timerB').style.visibility='hidden';
@@ -270,13 +191,11 @@ async function replayGame(){
     document.getElementById('undo').style.visibility='hidden';
     document.getElementById('redo').style.visibility='hidden';
     document.getElementById('pause').style.visibility='hidden';
-    await delay(1000);
+    var i=0;console.log(array);await delay(2000);
+    clearInterval(timerIdA);
     document.getElementById('timerA').style.visibility='hidden';
-    var i=0;
     timerid=setInterval(async function(){
         console.log(i); 
-        // document.querySelector('.'+toggle_turn+'.'+array[i][0]).style.visibility='hidden';
-        // await delay(2000);
         document.querySelector('.'+toggle_turn+'.'+array[i][0]).click();
         await delay(200);
         console.log(array[i]);
@@ -414,9 +333,15 @@ function Undo_turn(){
 
 function resetGamePlay(){
     document.getElementById('playAgain').removeEventListener('click',resetGamePlay);
-    document.getElementById('game_over').style.visibility='hidden';
+    document.getElementById('game_over').style.display='none';
     document.getElementById('reset').removeEventListener('click',resetGamePlay);
     document.getElementById('play').removeEventListener('click',resetGamePlay);
+    document.getElementById('timerA').style.visibility='visible';
+    document.getElementById('timerB').style.visibility='visible';
+    document.getElementById('moves_played').style.visibility='visible';
+    document.getElementById('undo').style.visibility='visible';
+    document.getElementById('redo').style.visibility='visible';
+    document.getElementById('pause').style.visibility='visible';
     document.getElementById('history').innerHTML='';
     history_of_moves.splice(0);
     redo_if_needed.splice(0);
@@ -459,7 +384,7 @@ function resetGamePlay(){
     highlightBoxes();
    is_game_paused=false;
    timerOn('A');
-   document.getElementById('game_pause').style.visibility='hidden';},1000);
+   document.getElementById('game_pause').style.display='none';},1000);
 
 }
 function pauseGamePlay(){
@@ -470,7 +395,7 @@ function pauseGamePlay(){
    clearInterval(timerIdA);
    clearInterval(timerIdB);
    second_click=false;  
-   document.getElementById('game_pause').style.visibility='visible';
+   document.getElementById('game_pause').style.display='block';
    if (game_state==1)
     {
         document.querySelectorAll(".A").forEach(item =>{item.removeEventListener("click",pinky);});
@@ -491,7 +416,7 @@ async function playGamePlay(){
     is_game_paused=false;
     document.getElementById('play').removeEventListener('click',playGamePlay);
     document.getElementById('reset').removeEventListener('click',playGamePlay);
-    document.getElementById('game_pause').style.visibility='hidden';
+    document.getElementById('game_pause').style.display='none';
     var audioElement=document.querySelector('audio');
    audioElement.play();
     if (game_state==1||game_state==2){
@@ -1076,7 +1001,7 @@ function check_element_in_given_id(id,c_p,b_s){
         }
     else if(item==='Titan')
         {var titan=newDiv.classList[3];
-        if (toggle_turn!=titan){game_over=toggle_turn}
+        if (toggle_turn!=titan){game_over=toggle_turn;console.log('Titan:captured');}
         return false;}
     else {return false;}
 }
@@ -1084,7 +1009,7 @@ function check_element_in_given_id(id,c_p,b_s){
 async function move_bullet(AorB){
     return new Promise((resolve, reject) => {
         try 
-        {
+        {   
             var duration;var j=2;
             ba=document.querySelector('.ball'+AorB);
             var b_s=ba.classList[2];
@@ -1106,14 +1031,15 @@ async function move_bullet(AorB){
                 bullet.style.transform="rotate(-90deg)";
                 bullet.style.top='0px';
                 bullet.style.left='0px';
-                
+                count=0;
                 var value=left_target-parseInt(ba.style.left);//speed=0.2
-                duration =value*(2.5);console.log('duration:'+duration);
-                var ta;
+                duration =Math.ceil(value/j)*(5);
+                var ta;var count;
                 ta=setInterval(()=>
                 {   
                     ba.style.left=parseInt(ba.style.left)+j+'px';
-                    if (parseInt(ba.style.left)>=left_target){clearInterval(ta)}
+                    count+=5;
+                    if (parseInt(ba.style.left)>=left_target-10){flag3=true;clearInterval(ta);}
                     if (is_game_paused){clearInterval(ta);resolve();}
                 },5);
             } else if (b_s == 'left') {
@@ -1124,12 +1050,12 @@ async function move_bullet(AorB){
                 bullet.style.top='0px';
                 bullet.style.left='0px';
                 var value=parseInt(ba.style.left)-left_target;
-                duration=value*(2.5);console.log('duration:'+duration);
+                duration=Math.ceil(value/j)*(5)
                 var ta;
                 ta=setInterval(()=>
                 {
                     ba.style.left=parseInt(ba.style.left)-j+'px';
-                    if(parseInt(ba.style.left)<=left_target){clearInterval(ta)}
+                    if(parseInt(ba.style.left)<=left_target){flag3=true;clearInterval(ta);}
                     if (is_game_paused){clearInterval(ta);resolve();}
                 },5);
             } 
@@ -1142,12 +1068,12 @@ async function move_bullet(AorB){
                 bullet.style.top='-10px';
                 bullet.style.left='10px';
                 var value=parseInt(ba.style.top)-top_target;
-                var duration =value*(2.5);
+                var duration =Math.ceil(value/j)*(5)
                 var ta;
                 ta=setInterval(()=>
                 {
                     ba.style.top=(parseInt(ba.style.top)-j)+'px';
-                    if (parseInt(ba.style.top)<=top_target){clearInterval(ta)}
+                    if (parseInt(ba.style.top)<=top_target){flag3=true;clearInterval(ta);}
                     if (is_game_paused){clearInterval(ta);resolve();}
                 },5);
 
@@ -1159,18 +1085,19 @@ async function move_bullet(AorB){
                 bullet.style.top='-5px';
                 bullet.style.left='-10px';
                 var value=top_target-parseInt(ba.style.top);//speed=0.2
-                duration =value*(2.5);var ta;
+                duration =Math.ceil(value/j)*(5);var ta;var count=0;
                 ta=setInterval(()=>
                 {
-                    ba.style.top=parseInt(ba.style.top)+j+'px';
-                    if (parseInt(ba.style.top)>=top_target){clearInterval(ta)}
+                    ba.style.top=parseInt(ba.style.top)+j+'px';count=count+5;
+                    if (parseInt(ba.style.top)>=top_target){flag3=true;clearInterval(ta);}
                     if (is_game_paused){clearInterval(ta);resolve();}
                 },5);
             }
+            
             setTimeout(async function()
-            {   
+            {   if (flag3){
                 if (!k){
-                    if (!is_game_paused){console.log("Entered pinky");
+                    if (!is_game_paused){
                         if (AorB=='A'){ba.classList.replace(ba.classList[2],'down')}
                         else{ba.classList.replace(ba.classList[2],'up')}
                         removed_element=['',''];
@@ -1190,22 +1117,20 @@ async function move_bullet(AorB){
                         newDiv.appendChild(ba);
                         if (AorB=='A'){move_buttonA();timerIdB=setInterval(RunB,1000);resolve();}
                         else{move_buttonB();timerIdA=setInterval(RunA,1000);resolve();}
-                        destroy=false;
+                        destroy=false;flag3=false;
                     }
                 }
                 else if(k!=false){
                     if(!is_game_paused){
-                        b_s = k;console.log('b_s:'+b_s)
+                        b_s = k;
                         ba.classList.replace(ba.classList[2], k);
-                        setTimeout(() => {
-                            move_bullet_with_promise(AorB).then(resolve); 
-                        }, 50);
+                        move_bullet_with_promise(AorB).then(resolve); flag3=false;
                     }
-                }
-            },duration+60)
+                }}
+            },duration+500)
             
         }
-        catch (error) {reject(error) }
+        catch (error){reject(error) }
     });
 }
 timerOn('A');
