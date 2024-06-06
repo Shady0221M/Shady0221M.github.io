@@ -21,47 +21,6 @@ var body=document.querySelector("body");
 var container=document.querySelector(".container");
 var block=document.querySelectorAll(".block");
 
-//1.1Setup outer box
-function setupOuterFrameCB(){
-    var newDiv=document.createElement("div");
-    newDiv.style.backgroundColor="black";
-    newDiv.style.position='relative';
-    newDiv.style.border="3px solid deeppink";
-    var parent=document.querySelector("body");
-    parent.appendChild(newDiv);
-    newDiv.className='container';
-    newDiv.style.backgroundColor='deeppink';
-}
-
-//1.2Set up 64 boxes as (8x8)
-function  setupInnerBlocks(){
-    for(var i=7;i>=0;i--)
-        {
-            for(var j=0;j<=7;j++)
-                {
-                    var newDiv=document.createElement("div");
-                    
-                    newDiv.className='r'+i.toString()+' c'+j.toString()+' block';
-                    
-                    newDiv.setAttribute('id',(i).toString()+(j).toString());
-                    
-                    document.querySelector(".container").appendChild(newDiv);
-                    newDiv.style.width='10.52vh';
-                    newDiv.style.height='10.52vh';
-                    newDiv.style.position='relative';
-                    // newDiv.style.opacity='1';
-                    newDiv.style.backgroundColor='black';
-                }
-        }
-    var body=document.querySelector("body");
-    var container=document.querySelector(".container"); 
-    body.style.display='flex';
-    body.style.justifyContent="center";
-    container.style.display="grid";
-    container.style.grid="repeat(8,10.52vh) / repeat(8,10.52vh)";
-    container.style.columnGap="5px";
-    container.style.rowGap="5px";
-}
 
 function clearBoard(){
     var block=document.querySelectorAll(".block");
@@ -70,8 +29,7 @@ function clearBoard(){
             block[i].innerHTML='';block[i].className=block[i].className.slice(0,11);
         }
 }
-///resources/images/pieces/bullet_down.svg
-//1.3Setup pieces in position
+
 function setupPieces(){
     var block=document.querySelectorAll(".block");
     block[4].innerHTML="<img id='TitanA' src='/resources/images/pieces/TitanA.png' alt='TitanA'></img>";
@@ -109,54 +67,11 @@ function setupPieces(){
     document.getElementById("CannonB").style.position='absolute';
     document.querySelector(".ballB").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:28.5px;bottom:27.5px;z-index:1;";
     document.querySelector(".ballA").style.cssText="width:10px;height:10px;background-color:blue;border-radius:50%;position:absolute;left:27px;top:23.5px;z-index:1;";
-    document.querySelector('.rotate').style.left='10vw';
-    var container=document.querySelector(".container");
-    container.style.position='relative';
-    container.style.left='-10vw';
-    container.style.top='6vh';
-    document.body.style.backgroundColor='#B6FFFA';
-    // document.getElementById('pause').style.left='300px';
-    // document.getElementById('undo').style.left='400px';
-    // document.getElementById('redo').style.left='500px';
-    //background-image: linear-gradient(144deg,#FE1F4E, #D1FE49 50%,#FBB23F);
-}
-
-function initialsetup()
-    {
-    setupOuterFrameCB();
-    setupInnerBlocks();
-    setupPieces();
     }
-initialsetup();
 
-function defaultBlockColor(){
-    for(var i=0;i<64;i++)
-        {
-            document.querySelectorAll(".block")[i].style.backgroundColor="black";
-        }
-    
-}
+setupPieces();
 //****************************************************************************************************************************** */
-//0.)Timer
-function setUpTimer(AorB){
-    var timer=document.createElement('p');
-    document.body.appendChild(timer);
-    timer.id='timer'+AorB;
-    timer.style.position='relative';
-    timer.style.width='7.81vw';
-    timer.style.height='9.02vh';
-    timer.style.backgroundColor='#E8FFCE';
-    timer.style.border="1px solid black";
-    if (AorB=='A'){timer.style.left='-67vw';}
-    else{timer.style.left='-14.5vw';}
-    timer.innerHTML='05:00';
-    timer.style.fontSize='40px';
-    timer.style.display='flex';
-    timer.style.justifyContent='center';
-    timer.style.paddingTop='1.5vh';  
-    // timer.style.visibility='hidden'; 
 
-}
 //Global variable declaration for timer static variables
 var timeA=300;
 var timeB=300;
@@ -216,14 +131,11 @@ function pause_timer(){
         else{clearInterval(timerIdB);}
     }
 }
-setUpTimer('A');
-setUpTimer('B');
 //*************************************************************************** */
 function end_of_game(){
     var div=document.getElementById('game_over');
-    div.style.visibility='visible';
+    div.style.display='block';
     document.querySelector('.winner').innerHTML=toggle_turn+' is the Winner';
-    document.querySelector('.winner').style.cssText='position:relative;font-size: 25px;top: 48.12vh;left: 9.375vw;font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;color:darkred;';
     document.getElementById('playAgain').addEventListener('click',resetGamePlay);
     document.getElementById('replay').style.opacity='0.2';
     document.getElementById('replay').style.fontSize='10px';
@@ -233,6 +145,8 @@ function end_of_game(){
 function setUpPausePlayReset(){
     document.getElementById('pause').addEventListener('click',pauseGamePlay);
     document.getElementById('reset').addEventListener('click',resetGamePlay);
+   
+   
 }
     setUpPausePlayReset();
 
@@ -263,7 +177,7 @@ function resetGamePlay(){
    timer.innerHTML='05:00';
    timer=document.getElementById('timerA');
    timer.innerHTML='05:00';
-   
+   game_over=false;
    
    setTimeout(()=>{clearBoard();
     setupPieces();
@@ -272,8 +186,9 @@ function resetGamePlay(){
     highlightBoxes();
    is_game_paused=false;
    timerOn('A');
-   document.getElementById('game_pause').style.visibility='hidden';},1000);
-   document.getElementById('game_over').style.visibility='hidden';
+   document.getElementById('game_pause').style.display='none';
+   document.getElementById('game_over').style.display='none';},1000);
+   
    
    
 }
@@ -283,8 +198,7 @@ function pauseGamePlay(){
    clearInterval(timerIdA);
    clearInterval(timerIdB);
    second_click=false;  
-   document.getElementById('game_pause').style.opacity='0.7';
-   document.getElementById('game_pause').style.visibility='visible';
+   document.getElementById('game_pause').style.display='block';
    if (game_state==1)
     {
         document.querySelectorAll(".A").forEach(item =>{item.removeEventListener("click",pinky);});
@@ -298,7 +212,7 @@ function pauseGamePlay(){
 async function playGamePlay(){
     is_game_paused=false;
     
-    document.getElementById('game_pause').style.visibility='hidden';
+    document.getElementById('game_pause').style.display='none';
     if (game_state==1||game_state==2){
         if (toggle_turn=='A'){timerIdA=setInterval(RunA,1000); }
         else{timerIdB=setInterval(RunB,1000);}
