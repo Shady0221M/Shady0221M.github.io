@@ -410,10 +410,14 @@ function pauseGamePlay(){
 }
     document.getElementById('play').addEventListener('click',playGamePlay);
     document.getElementById('reset').addEventListener('click',resetGamePlay);
+    document.getElementById('undo').removeEventListener('click',Undo_turn);
+    document.getElementById('redo').removeEventListener('click',Redo_turn);
 }
 
 async function playGamePlay(){
     is_game_paused=false;
+    document.getElementById('undo').addEventListener('click',Undo_turn);
+    document.getElementById('redo').addEventListener('click',Redo_turn);
     document.getElementById('play').removeEventListener('click',playGamePlay);
     document.getElementById('reset').removeEventListener('click',playGamePlay);
     document.getElementById('game_pause').style.display='none';

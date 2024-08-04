@@ -1,6 +1,7 @@
 
 body{
-  background-image:linear-gradient(200deg, #fe8dc6, #fed1c7);
+  background-image:url('/resources/images/background_image/Hacker.jpg');
+  background-size: cover;
   width:100%;
   height:100vh;
 }
@@ -33,14 +34,16 @@ body{
   grid-template-columns: repeat(8,70px);
   grid-template-rows:repeat(8,70px);
   row-gap: 5px;column-gap:5px;
-  background-color:#AF8F6F;
+  background-color:#3e4202;
   border:2px solid #AF8F6F;
   position:relative;
 }
 .timer{
   height:25px;
   font-weight: 300;
-  background-image: linear-gradient(200deg, #95c458, #fed1c7);
+  background-image: linear-gradient(200deg, #5db670, #707dbd);
+  border:solid 1px black; 
+  border-radius:2px;
   background-size: cover;
   text-align: center;
 }
@@ -62,7 +65,7 @@ body{
   font-weight: 700;
   text-align: center;
   padding: 13px 14px 12px;
-  color: brown;
+  color: rgb(139, 128, 10);
   box-shadow: inset 0 0 0 2px #3AA6B9;
   background-color: transparent;
   visibility:visible;
@@ -75,22 +78,27 @@ body{
   background-color: #3AA6B9;
 }
 #moves_played{
-  background-image: url('/resources/images/background_image/history.png');
-  background-size: cover;
+  /* background-image: url('/resources/images/background_image/history.png');
+  background-size: cover; */
+  background-image:linear-gradient(200deg, #df59e1, #605699);
+  border-radius:15px;
+  padding:5px;
 }
-
+#play,#reset{
+  color:#01015a;
+}
 #game_pause,#game_over{
   position: absolute; 
   top: 50%; 
   left: 50%; 
   text-align: center;
   transform: translate(-50%, -50%); 
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(210, 138, 228, 0.8);
   padding: 20px; 
   border-radius: 10px; 
   display:none;
   z-index: 10;
   font-family:Franklin Gothic Medium, Arial Narrow, Arial, sans-serif;
-  color: chocolate;
+  color: rgb(48, 7, 114);
   font-weight: 500;
 }
